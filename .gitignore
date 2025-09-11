@@ -6,7 +6,9 @@ cleaned/
 # Keep final analysis datasets but exclude large intermediate files
 processed/*.parquet
 !final/final_panel_COMPLETE.parquet
-!final/final_panel_COMPLETE.dta
+
+# Exclude large .dta files (>100MB GitHub limit)
+*.dta
 
 # Python
 __pycache__/

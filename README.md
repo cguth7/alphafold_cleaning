@@ -9,7 +9,7 @@ This repository contains a complete data processing pipeline and analysis-ready 
 ### Final Dataset
 The analysis-ready dataset is available in `final/`:
 - **`final_panel_COMPLETE.parquet`** (7.7 MB) - For Python analysis
-- **`final_panel_COMPLETE.dta`** (180 MB) - For Stata analysis
+- **Stata users**: Generate .dta file by running the processing scripts locally
 
 ```python
 import pandas as pd
@@ -156,6 +156,15 @@ result = sm.ols(
 ```
 
 ### Stata Analysis
+
+First, generate the .dta file from Python:
+```python
+import pandas as pd
+df = pd.read_parquet('final/final_panel_COMPLETE.parquet')
+df.to_stata('final/final_panel_COMPLETE.dta', write_index=False)
+```
+
+Then proceed with analysis:
 ```stata
 use "final/final_panel_COMPLETE.dta", clear
 tsset gene_id ym_seq
@@ -174,7 +183,7 @@ reghdfe n_papers i.post_alphafold##i.high_confidence, ///
 ### Software
 - Python 3.9+
 - Required packages: `pandas`, `numpy`, `pyarrow`, `statsmodels`
-- Stata 14+ (for .dta files)
+- Stata 14+ (for .dta files - generate locally using the processing scripts)
 
 ### Hardware
 - **Memory**: 8GB RAM recommended
