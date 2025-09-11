@@ -23,6 +23,7 @@ print(f"Genes: {df['gene_id'].nunique():,}, Months: {df['ym'].nunique()}")
 2. How did AlphaFold affect citation quality distributions?
 3. Did AlphaFold impact newcomer author entry patterns?
 4. Are effects heterogeneous across gene characteristics?
+5. Do AlphaFold effects vary by functional gene groups?
 
 ## Dataset Overview
 
@@ -47,6 +48,7 @@ print(f"Genes: {df['gene_id'].nunique():,}, Months: {df['ym'].nunique()}")
 - `gene_name`: Gene symbol
 - `average_plddt`: AlphaFold confidence score
 - `protein_existence`: Evidence level
+- `gene_group`: Functional gene group classification (73.7% coverage)
 
 ## Data Processing Pipeline
 
@@ -69,6 +71,8 @@ Citation-Enriched (13.7M)
     ↓ [Phase 5: Panel Construction]
 Gene-Month Panel (945K)
     ↓ [Final: Disease Innovation]
+Disease-Enriched Panel (945K)
+    ↓ [Gene Groups Addition]
 Analysis-Ready Dataset (945K)
 ```
 
@@ -85,7 +89,8 @@ Analysis-Ready Dataset (945K)
 │       ├── 02A_author_novelty.py         # Add author information
 │       ├── 04_citation_enrichment.py     # Add citation metrics  
 │       ├── 05_panel_construction.py      # Create balanced panel
-│       └── 07_fix_unique_diseases_simple.py  # Final disease merge
+│       ├── 07_fix_unique_diseases_simple.py  # Final disease merge
+│       └── 08_add_gene_groups.py         # Add functional gene groups
 ├── processed/                            # Intermediate data files
 ├── final/                               # Analysis-ready datasets
 ├── PIPELINE_DOCUMENTATION.md           # Complete technical documentation

@@ -39,6 +39,10 @@ Gene-Month Panel (945K obs)
     ↓
 [Fix] → 07_fix_unique_diseases_simple.py
     ↓
+Disease-Enriched Panel (945K obs)
+    ↓
+[Enhancement] → 08_add_gene_groups.py
+    ↓
 Final Analysis Dataset (945K obs)
 ```
 
@@ -94,6 +98,12 @@ Final Analysis Dataset (945K obs)
    - **Purpose**: Merge unique disease innovation metrics
    - **Key Decision**: Simple gene_id + ym merge using proper time mapping
 
+9. **`scripts/data_processing/08_add_gene_groups.py`** (Gene Groups Enhancement)
+   - **Input**: Disease-enriched panel + genes_groups.dta
+   - **Output**: `final/final_panel_COMPLETE.parquet` (945K obs with gene_group)
+   - **Purpose**: Add functional gene group classifications
+   - **Key Decision**: Left join to preserve panel structure, 73.7% coverage achieved
+
 ### Diagnostic/Fix Scripts (Not in Main Pipeline)
 
 - `06_fix_final.py`: Early attempt at fixing time variables
@@ -139,6 +149,12 @@ Final Analysis Dataset (945K obs)
 - **Solution**: Map via ym_date column in unique disease files
 - **Final Approach**: Direct gene_id + ym merge after proper time mapping
 
+### 8. Gene Group Classifications
+- **Source**: Gene groups classification file (40,704 records)
+- **Coverage**: 73.7% of panel genes have functional group assignments
+- **Multiple Groups**: Some genes have multiple classifications (e.g., "442|454")
+- **Decision**: Left join to preserve panel structure, enabling functional heterogeneity analysis
+
 ## Data Flow Summary
 
 | Stage | Input Size | Output Size | Retention | Key Transformation |
@@ -151,6 +167,7 @@ Final Analysis Dataset (945K obs)
 | Citation Enrichment | 14M records | 14M records | 100% | Add citations + quality percentiles |
 | Panel Construction | 14M records | 945K obs | Aggregation | Gene-month aggregation + balance |
 | Disease Innovation | 945K obs | 945K obs | 100% | Add unique disease metrics |
+| Gene Groups | 945K obs | 945K obs | 100% | Add functional classifications (73.7% coverage) |
 
 ## Final Dataset Structure
 
@@ -191,6 +208,7 @@ Final Analysis Dataset (945K obs)
 - `gene_name`: Gene symbol
 - `protein_existence`: Evidence level
 - `average_plddt`: AlphaFold confidence score
+- `gene_group`: Functional gene group classification (73.7% coverage)
 
 ## Quality Validation
 
@@ -238,6 +256,7 @@ gen post_announcement = (year >= 2020.5)
 4. **Disease Innovation**: Did AlphaFold accelerate unique disease associations?
 5. **Temporal Dynamics**: Do effects vary across quarterly/bi-monthly granularity?
 6. **Heterogeneity**: Are effects larger for high-confidence AlphaFold proteins?
+7. **Functional Analysis**: Do AlphaFold effects vary by gene functional groups?
 
 ## Computational Requirements
 
