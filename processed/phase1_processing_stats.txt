@@ -1,0 +1,23 @@
+Phase 1: Disease Filter Processing Statistics
+==================================================
+
+Input file: cleaned/disease_pmid_mesh.txt
+Output file: disease_relevant_pmids.parquet
+
+Initial disease mentions: 163,082,572
+Final disease mentions: 99,440,126
+Retention rate: 60.98%
+
+Kept entries:
+  OMIM diseases: 1,077,433
+  MESH depth 3/4: 98,362,693
+
+Unique PMIDs: 21,844,614
+Output file size: 95.2 MB
+
+Sample excluded identifiers:
+  1. MESH:D013167
+  2. MESH:D007669
+  3. MESH:D012559
+  4. MESH:D001523
+  5. MESH:D012560

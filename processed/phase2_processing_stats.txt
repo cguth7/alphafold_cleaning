@@ -1,0 +1,50 @@
+Phase 2: Gene-Disease Intersection Processing Statistics
+============================================================
+
+Input files:
+  - cleaned/gene_pmid_id.txt (Gene PubTator data)
+  - processed/disease_relevant_pmids.parquet (Phase 1 output)
+  - intermediate_data/protein_data_master_dta.dta (Master genes)
+
+Output file: gene_disease_intersect.parquet
+
+STEP 1: Gene-Disease Publication Intersection
+---------------------------------------------
+Initial gene mentions: 72,566,281
+Disease-relevant mentions: 59,648,355
+Mention retention: 82.20%
+
+Initial unique PMIDs: 9,128,172
+Disease-relevant PMIDs: 6,692,496
+PMID retention: 73.32%
+
+Initial unique genes: 6,688,364
+Disease-relevant genes: 3,292,917
+Gene retention: 49.23%
+
+STEP 2: Master Gene List Filtering
+-----------------------------------
+Master genes available: 19,950
+Genes in master list: 19,783
+Genes NOT in master: 3,273,134
+Final gene retention: 0.60%
+Final mention retention: 56.36%
+
+Final Output Summary
+--------------------
+Total records: 33,618,023
+Unique PMIDs: 5,611,104
+Unique genes: 19,783
+Avg mentions per paper: 5.99
+Output file size: 118.0 MB
+
+Sample excluded genes (not in master):
+  1. Gene ID: 64030
+  2. Gene ID: 24887
+  3. Gene ID: 24224
+  4. Gene ID: 24185
+  5. Gene ID: 85243
+
+⚠️  WARNING: Low retention rate (56.4%)
+   Many genes in PubTator are missing from master protein dataset.
+   Consider investigating master gene list completeness.

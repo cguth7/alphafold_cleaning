@@ -1,0 +1,22 @@
+# AlphaFold Impact Analysis - Python Dependencies
+
+# Core data processing
+pandas>=1.5.0
+numpy>=1.21.0
+pyarrow>=8.0.0
+
+# Statistical analysis (optional)
+statsmodels>=0.13.0
+scipy>=1.9.0
+
+# Utilities
+pathlib
+tqdm
+
+# For Stata file handling
+pandas>=1.5.0  # includes .dta support
+
+# Development/testing (optional)
+jupyter
+matplotlib
+seaborn

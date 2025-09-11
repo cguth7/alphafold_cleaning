@@ -1,0 +1,39 @@
+Phase 4: Citation Enrichment Processing Statistics
+=======================================================
+
+Input files:
+  - processed/author_novelty.parquet (Phase 2A output)
+  - raw_data/icite_cites_join.dta (iCite citation data)
+
+Output file: citation_enriched.parquet
+
+STEP 1: Citation Data Merging
+-----------------------------
+Author-novelty records: 13,673,571
+Records after citation merge: 13,673,571
+PMIDs with citations: 1,349,823/1,444,655
+Citation coverage: 93.44%
+Mean citations per paper: 24.77
+Median citations per paper: 11.00
+
+STEP 2: Citation Quality Flags
+------------------------------
+Created high-citation flags at three temporal granularities:
+  - Annual: hi25_year, hi10_year, hi05_year
+  - Quarterly: hi25_quarter, hi10_quarter, hi05_quarter
+  - Bi-monthly: hi25_bimonth, hi10_bimonth, hi05_bimonth
+
+Final Output Summary
+--------------------
+Total records: 13,673,571
+Unique PMIDs: 1,444,655
+Unique genes: 19,690
+Unique authors: 607,477
+Time span: 2020-2023
+Output file size: 153.1 MB
+
+Ready for Phase 5: Panel Construction
+  - Gene-level records with citation quality flags
+  - Author novelty indicators (newcomer/veteran)
+  - Multi-granularity temporal variables
+  - Comprehensive metadata for aggregation

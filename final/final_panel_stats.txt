@@ -1,0 +1,35 @@
+Final Balanced Gene-Month Panel Statistics
+==================================================
+
+Panel Structure:
+  Total observations: 945,120
+  Unique genes: 19,690
+  Time periods: 48 months
+  Time span: 53.0-57.0
+  Balanced: Yes
+
+Activity Summary:
+  Observations with publications: 711,806 (75.31%)
+  Total publications: 13,673,571
+  Mean publications per gene-month: 14.468
+  Max publications in gene-month: 4445
+
+Citation Quality:
+  High-citation papers (top 25% annual): 5,437,309
+  High-citation papers (top 10% annual): 2,487,669
+  High-citation papers (top 5% annual): 1,339,172
+
+Author Dynamics:
+  Papers with newcomer authors: 11,537,611
+  Papers with veteran authors: 2,135,960
+
+Disease Innovation:
+  Unique mesh diseases: 0
+  New mesh diseases: 0
+
+Gene Coverage:
+  Genes with protein metadata: 19,690
+  Coverage rate: 100.00%
+
+Output file size: 7.3 MB
+Ready for AlphaFold impact analysis!

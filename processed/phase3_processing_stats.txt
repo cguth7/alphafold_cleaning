@@ -1,0 +1,48 @@
+Phase 3: Temporal Filtering Processing Statistics
+=======================================================
+
+Input files:
+  - processed/gene_disease_intersect.parquet (Phase 2 output)
+  - raw_data/complete_pmid_dates.csv (NIH publication dates)
+
+Output file: gene_disease_temporal.parquet
+
+STEP 1: Date Merging
+--------------------
+Initial records: 33,618,023
+Records with dates: 30,557,149
+Merge success rate: 90.90%
+PMID merge rate: 80.23%
+
+STEP 2: AlphaFold Era Filtering (2020-2023)
+----------------------------------------
+Pre-filter records: 30,557,149
+Post-filter records: 13,721,571
+Temporal retention: 44.90%
+
+Pre-filter PMIDs: 4,501,825
+Post-filter PMIDs: 1,450,703
+
+Pre-filter genes: 19,779
+Post-filter genes: 19,690
+
+Final Year Distribution:
+  2020: 2,958,687 records (21.6%)
+  2021: 3,797,862 records (27.7%)
+  2022: 3,905,439 records (28.5%)
+  2023: 3,059,583 records (22.3%)
+
+Final Output Summary
+--------------------
+Total records: 13,721,571
+Unique PMIDs: 1,450,703
+Unique genes: 19,690
+Time span: 2020-2023 (AlphaFold era)
+Avg mentions per paper: 9.46
+Output file size: 57.2 MB
+
+Time Variables Created:
+  - year, month: Basic temporal units
+  - ym: Year-month combined (YYYYMM)
+  - quarter, year_quarter: Quarterly aggregation
+  - bimonth, year_bimonth: Bi-monthly aggregation
