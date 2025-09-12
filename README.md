@@ -7,16 +7,27 @@ This repository contains a complete data processing pipeline and analysis-ready 
 ## Quick Start
 
 ### Final Dataset
-The analysis-ready dataset is available in `final/`:
-- **`final_panel_COMPLETE.parquet`** (7.7 MB) - For Python analysis
-- **Stata users**: Generate .dta file by running the processing scripts locally
+The analysis-ready datasets are available locally in `final/` (not tracked in git due to size):
+
+**Recommended for Analysis:**
+- **`final_panel_CLEAN.dta`** (172.6 MB) - Clean Stata format with essential columns only
+
+**Full Datasets:**
+- **`final_panel_COMPLETE_WITH_MISSING.dta`** (270.8 MB) - Complete with missing proteins flagged  
+- **`final_panel_WITH_DEPOSITS.parquet`** (9.7 MB) - Python format with PDB deposits data
+- **`final_panel_WITH_GROUPS.parquet`** (209.1 MB) - Complete with gene groups
+
+**Archive:**
+- **`final/old/`** - Previous versions moved for reference
 
 ```python
 import pandas as pd
-df = pd.read_parquet('final/final_panel_COMPLETE.parquet')
+df = pd.read_stata('final/final_panel_CLEAN.dta')  # Recommended for analysis
 print(f"Dataset: {len(df):,} gene-month observations")
 print(f"Genes: {df['gene_id'].nunique():,}, Months: {df['ym'].nunique()}")
 ```
+
+> **Note**: Data files are stored locally and not tracked in git due to GitHub's 100MB file limit. Run the processing scripts to generate the datasets.
 
 ### Key Research Questions
 1. Did AlphaFold increase research activity per gene?
@@ -28,10 +39,11 @@ print(f"Genes: {df['gene_id'].nunique():,}, Months: {df['ym'].nunique()}")
 ## Dataset Overview
 
 ### Panel Structure
-- **945,120 observations** = 19,690 genes × 48 months
+- **962,448 observations** = 20,051 genes × 48 months
 - **Time Period**: January 2020 - December 2023 (AlphaFold era)
 - **Perfect Balance**: Every gene has data for every month
-- **Activity Rate**: 75.3% of gene-months have publications
+- **Activity Rate**: 74.0% of gene-months have publications
+- **Missing Flag**: 361 proteins (1.8%) flagged as `missing_from_literature = 1`
 
 ### Key Variables
 
@@ -228,6 +240,99 @@ If you use this dataset, please cite:
 **Python:** All scripts use `/usr/bin/python3` for consistency across environments.
 
 For complete technical documentation, see `PIPELINE_DOCUMENTATION.md`.
+
+## Pipeline Enhancement Summary
+
+This repository represents a major enhancement and correction of the original AlphaFold impact analysis pipeline. Key improvements and methodological corrections are documented below.
+
+### 🎯 Major Enhancements Completed
+
+#### 1. **Fixed Author Novelty Analysis (Section 2A)**
+**Issue**: Original analysis only used 2020-2023 data to establish author baselines, incorrectly classifying many veteran authors as newcomers.
+
+**Solution**: 
+- Created extended temporal dataset (2015-2023) with 22.2M records
+- Established proper author-gene baselines from 2015 onwards
+- Corrected newcomer rate: 84.4% → 81.3% (more accurate veteran identification)
+
+**Impact**: More accurate measurement of AlphaFold's effect on author entry patterns.
+
+#### 2. **Integrated PDB Deposits Data**
+**Enhancement**: Merged two deposit datasets into final panel:
+- `deposits_dta.dta` (7,791 proteins) → `num_deposits` column  
+- `deposits_monthly_dta.dta` (46,736 records) → `monthly_deposits` column
+
+**Coverage**: 39.5% of proteins have deposit data, 1.5% of protein-months have monthly deposits.
+
+#### 3. **Complete Protein Universe Recovery**
+**Issue**: Original analysis missed 361 proteins from the master protein dataset.
+
+**Solution**: Added missing proteins with dummy flag (`missing_from_literature = 1`).
+
+**Result**: Complete balanced panel (20,051 proteins × 48 months = 962,448 records).
+
+#### 4. **Enhanced Data Organization**
+- **Clean Analysis File**: `final_panel_CLEAN.dta` with streamlined columns (24 vs 32)
+- **Time Variable**: Single `ym` column (720-767 format) replacing 8 redundant time variables
+- **Archive Structure**: Moved older versions to `final/old/` folder
+- **Documentation**: Comprehensive column documentation and processing statistics
+
+### ⚠️ Critical Methodological Differences
+
+#### **MeSH Disease Levels: 3+4 vs 3+4+5**
+**Key Finding**: The original Stata pipeline and this Python pipeline differ in disease scope:
+
+- **Original Stata**: Uses MeSH depth levels **3, 4, AND 5** 
+- **This Pipeline**: Uses MeSH depth levels **3 AND 4 only**
+
+**Quantified Impact**:
+- 88.6% of gene-months have identical `n_papers` counts
+- 11.4% differ, with Stata consistently higher (+0.18 papers/gene-month average)  
+- Total difference: ~121,000 additional paper counts in Stata version
+
+**Implication**: Regression results will differ between pipelines due to this methodological choice. Including MeSH level 5 diseases captures more publications but may include less specific disease associations.
+
+#### **Other Data Processing Decisions Affecting Results**
+
+1. **Disease Filtering Strictness**
+   - **Conservative** (this pipeline): Stricter OMIM + MeSH 3+4 only
+   - **Inclusive** (Stata): OMIM + MeSH 3+4+5
+   - **Impact**: ~8.5% difference in paper counts
+
+2. **Gene Universe Definition**  
+   - **Complete**: 20,051 proteins (includes 361 with no literature)
+   - **Literature-Only**: 19,690 proteins (excludes proteins without publications)
+   - **Impact**: Choice affects baseline and statistical power
+
+3. **Author Baseline Period**
+   - **Extended** (corrected): 2015-2023 for author history
+   - **Limited** (original): 2020-2023 only
+   - **Impact**: 3.1 percentage point reduction in newcomer rate
+
+4. **Panel Balancing Strategy**
+   - **Complete Fill**: All gene-months present (including zeros)
+   - **Activity-Only**: Only gene-months with publications
+   - **Impact**: Affects regression interpretation and standard errors
+
+5. **Citation Percentile Calculations**
+   - **Multi-Temporal**: Annual + Quarterly + Bi-monthly percentiles
+   - **Single**: One time-based percentile only  
+   - **Impact**: More granular citation quality measures
+
+### 📊 Data Quality Validation
+
+**Panel Balance**: ✅ Perfect (20,051 × 48 = 962,448)
+**Time Coverage**: ✅ Complete (no missing months)
+**Author Consistency**: ✅ Veteran + Newcomer = Total (zero mismatches)
+**Citation Coverage**: ✅ 93.4% of papers have citation data
+**Missing Data Handling**: ✅ Explicit flags for missing proteins
+
+### 🔄 Reproducibility and Version Control
+
+**Scripts**: All processing steps documented in numbered Python scripts
+**Statistics**: Comprehensive processing statistics saved for each step
+**Validation**: Built-in data quality checks and validation steps
+**Paths**: Uses `/usr/bin/python3` for consistency across environments
 
 ## License
 

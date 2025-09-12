@@ -1,0 +1,52 @@
+Phase 2A Extended: Author Novelty Analysis Processing Statistics
+======================================================================
+
+Input files:
+  - processed/gene_disease_temporal_extended.parquet (2015-2023 data)
+  - intermediate_data/pmids_authors_openalex_deduped.dta
+
+Output file: author_novelty_extended.parquet
+
+STEP 1: Author Data Merging
+---------------------------
+Initial extended temporal records: 22,195,971
+Records with author data: 15,595,323
+Merge success rate: 70.26%
+PMID coverage rate: 65.02%
+Unique authors identified: 659,374
+
+STEP 2: Author Novelty Analysis (2015+ Baseline)
+----------------------------------------------
+Total author-gene pairs: 12,942,962
+Newcomer author records: 12,942,962
+Veteran author records: 2,652,361
+Newcomer rate: 82.99%
+
+STEP 3: AlphaFold Era Filtering
+------------------------------
+Extended baseline records: 15,595,323
+AlphaFold era records: 13,673,571
+Retention rate: 87.68%
+AlphaFold newcomer rate: 81.34%
+
+Final Output Summary
+--------------------
+Total records: 13,673,571
+Unique PMIDs: 1,444,655
+Unique genes: 19,690
+Unique authors: 607,477
+Time span: 2020-2023
+Output file size: 141.1 MB
+
+Key Improvement:
+  - Uses proper 2015+ baseline for author novelty classification
+  - More accurate newcomer/veteran distinctions in AlphaFold era
+  - Addresses the original issue in 02A analysis
+
+Novelty Flags Created:
+  - newcomer_author: 1 for first publication by author on gene since 2015, 0 otherwise
+  - not_newcomer_author: 1 for repeat publication by author on gene, 0 otherwise
+
+Next Steps:
+  - Aggregate to gene-month level for panel analysis
+  - Merge aggregated author metrics into final panel

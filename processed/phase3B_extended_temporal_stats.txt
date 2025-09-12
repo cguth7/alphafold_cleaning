@@ -1,0 +1,34 @@
+Phase 3B: Extended Temporal Filtering Processing Statistics
+=================================================================
+
+Input files:
+  - processed/gene_disease_intersect.parquet (Phase 2 output)
+  - raw_data/complete_pmid_dates.csv
+
+Output file: gene_disease_temporal_extended.parquet
+
+STEP 1: Date Merging
+------------------
+Initial gene-disease records: 33,618,023
+Records with date data: 30,029,090
+Merge success rate: 89.32%
+PMID coverage rate: 76.00%
+
+STEP 2: Extended Period Filtering (2015-2023)
+--------------------------------------------
+Pre-filter records: 30,029,090
+Post-filter records: 22,195,971
+Retention rate: 73.91%
+PMID retention: 60.08%
+Gene retention: 99.81%
+
+Final Output Summary
+--------------------
+Total records: 22,195,971
+Unique PMIDs: 2,562,132
+Unique genes: 19,742
+Time span: 2015-2023 (extended for author baseline)
+Output file size: 107.3 MB
+
+Purpose: Extended temporal window for author novelty baseline
+Next step: Use with 02A_author_novelty.py for proper author classification
