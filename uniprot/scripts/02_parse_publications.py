@@ -34,12 +34,14 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def extract_publications_from_entry(protein_entry: dict) -> List[Dict]:
+def extract_publications_from_entry(protein_entry: dict, min_year: int = None, max_year: int = None) -> List[Dict]:
     """
     Extract all publication data from a single UniProt protein entry.
 
     Args:
         protein_entry: Dictionary containing a UniProt protein entry
+        min_year: Minimum year to include (inclusive), None for no filter
+        max_year: Maximum year to include (inclusive), None for no filter
 
     Returns:
         List of publication dictionaries with extracted fields
@@ -87,6 +89,12 @@ def extract_publications_from_entry(protein_entry: dict) -> List[Dict]:
                     month = int(date_parts[1])
             except ValueError:
                 logger.warning(f"Could not parse date '{pub_date}' for {accession}")
+                continue
+
+            # Apply year filter if specified
+            if min_year is not None and year < min_year:
+                continue
+            if max_year is not None and year > max_year:
                 continue
 
             # Extract PubMed ID
@@ -146,13 +154,15 @@ def extract_publications_from_entry(protein_entry: dict) -> List[Dict]:
         return []
 
 
-def parse_uniprot_file(input_file: Path, dataset_type: str = 'reviewed') -> pd.DataFrame:
+def parse_uniprot_file(input_file: Path, dataset_type: str = 'reviewed', min_year: int = None, max_year: int = None) -> pd.DataFrame:
     """
     Parse a UniProt JSON file and extract all publications.
 
     Args:
         input_file: Path to UniProt JSON file
         dataset_type: Type of dataset ('reviewed' or 'unreviewed')
+        min_year: Minimum year to include (inclusive), None for no filter
+        max_year: Maximum year to include (inclusive), None for no filter
 
     Returns:
         DataFrame containing all extracted publications
@@ -166,11 +176,22 @@ def parse_uniprot_file(input_file: Path, dataset_type: str = 'reviewed') -> pd.D
     entries = data.get('results', [])
     logger.info(f"Found {len(entries):,} protein entries")
 
+    if min_year or max_year:
+        year_filter_msg = f"Filtering publications: "
+        if min_year:
+            year_filter_msg += f"{min_year} <= year"
+        if max_year:
+            if min_year:
+                year_filter_msg += f" <= {max_year}"
+            else:
+                year_filter_msg += f"year <= {max_year}"
+        logger.info(year_filter_msg)
+
     # Extract publications from all entries
     all_publications = []
 
     for entry in tqdm(entries, desc=f"Extracting {dataset_type} publications"):
-        pubs = extract_publications_from_entry(entry)
+        pubs = extract_publications_from_entry(entry, min_year=min_year, max_year=max_year)
         all_publications.extend(pubs)
 
     # Convert to DataFrame
@@ -274,6 +295,18 @@ def main():
         default=Path('data/processed'),
         help='Output directory for parsed data (default: data/processed)'
     )
+    parser.add_argument(
+        '--min-year',
+        type=int,
+        default=2020,
+        help='Minimum publication year to include (default: 2020)'
+    )
+    parser.add_argument(
+        '--max-year',
+        type=int,
+        default=2023,
+        help='Maximum publication year to include (default: 2023)'
+    )
 
     args = parser.parse_args()
 
@@ -282,6 +315,7 @@ def main():
     logger.info("="*60)
     logger.info(f"Input directory: {args.input_dir.absolute()}")
     logger.info(f"Output directory: {args.output_dir.absolute()}")
+    logger.info(f"Year range: {args.min_year} - {args.max_year}")
     logger.info("")
 
     # Create output directory
@@ -293,7 +327,7 @@ def main():
     reviewed_file = args.input_dir / "human_reviewed.json"
     if reviewed_file.exists():
         logger.info("Processing reviewed (Swiss-Prot) proteins...")
-        reviewed_df = parse_uniprot_file(reviewed_file, 'reviewed')
+        reviewed_df = parse_uniprot_file(reviewed_file, 'reviewed', min_year=args.min_year, max_year=args.max_year)
         all_publications.append(reviewed_df)
     else:
         logger.warning(f"Reviewed proteins file not found: {reviewed_file}")
@@ -302,7 +336,7 @@ def main():
     unreviewed_file = args.input_dir / "human_unreviewed.json"
     if unreviewed_file.exists():
         logger.info("Processing unreviewed (TrEMBL) proteins...")
-        unreviewed_df = parse_uniprot_file(unreviewed_file, 'unreviewed')
+        unreviewed_df = parse_uniprot_file(unreviewed_file, 'unreviewed', min_year=args.min_year, max_year=args.max_year)
         all_publications.append(unreviewed_df)
     else:
         logger.warning(f"Unreviewed proteins file not found: {unreviewed_file}")

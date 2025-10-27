@@ -14,6 +14,8 @@ This UniProt pipeline gets papers that are **ABOUT** genes (curated annotations)
 - PubTator: "This paper mentions TP53 in context of disease X"
 - UniProt: "This paper characterizes TP53 function, structure, or mechanism"
 
+**Time Period:** Pipeline defaults to **2020-2023** to match your AlphaFold analysis timeframe.
+
 ---
 
 ## Run It Locally (3 Commands)
@@ -44,11 +46,13 @@ data/outputs/
 ├── yearly_publications.csv                # Yearly aggregates
 └── global_monthly_timeseries.csv          # Overall trends
 
-Expected:
-- 50,000-200,000 publications
+Expected (2020-2023 default):
+- 20,000-50,000 publications
 - ~20,000 proteins
-- Full history (1900s-present)
-- ~1-2 hour runtime
+- 48 months (Jan 2020 - Dec 2023)
+- ~30-60 minute runtime
+
+To get full history: Add --min-year 1900 when running scripts
 ```
 
 ---
@@ -73,13 +77,15 @@ This tells you **exactly which papers are about which proteins**, not just menti
 
 ### Your PubTator Data (2020-2023)
 - 19,690 proteins
-- Disease-relevant papers that mention genes
+- Disease-relevant papers that **mention** genes
 - Good for: "Research involving gene X in disease context"
 
-### New UniProt Data (Full History)
+### New UniProt Data (2020-2023)
 - ~20,000 proteins
-- Papers that characterize/study genes
+- Papers that are **about** gene characterization
 - Good for: "Research focused on gene X specifically"
+
+**Perfect complement:** Same timeframe, different focus!
 
 ---
 
