@@ -54,12 +54,18 @@ def download_with_retry(url: str, output_file: Path, max_retries: int = 4) -> bo
     """
     retry_delays = [2, 4, 8, 16]  # Exponential backoff in seconds
 
+    # Add proper headers as required by UniProt API
+    headers = {
+        'User-Agent': 'AlphaFold-Pipeline/1.0 (research@example.com)',
+        'Accept': 'application/json'
+    }
+
     for attempt in range(max_retries + 1):
         try:
             logger.info(f"Downloading from {url} (attempt {attempt + 1}/{max_retries + 1})")
 
             # Stream the response to handle large files
-            response = requests.get(url, stream=True, timeout=300)
+            response = requests.get(url, headers=headers, stream=True, timeout=300)
             response.raise_for_status()
 
             # Write to file in chunks
