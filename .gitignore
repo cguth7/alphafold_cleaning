@@ -42,3 +42,8 @@ Thumbs.db
 # Logs
 *.log
 processing_*.txt
+
+# Large data directories
+new_stuff_for_claude/
+analysis_pipeline/data/
+matching_analysis/data/
