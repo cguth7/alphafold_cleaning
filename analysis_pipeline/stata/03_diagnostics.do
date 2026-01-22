@@ -77,7 +77,7 @@ foreach s of local semesters {
         local pct_c = 100 * (`c' - `prev_c') / `prev_c'
         local diff = `pct_t' - `pct_c'
 
-        di as txt %6.0f `s' "      " %+8.1f `pct_t' "%      " %+8.1f `pct_c' "%      " %+8.1f `diff' "pp"
+        di as txt %6.0f `s' "      " %8.1f `pct_t' "%      " %8.1f `pct_c' "%      " %8.1f `diff' "pp"
     }
 
     local prev_t = `t'
@@ -131,8 +131,8 @@ local c_drop = 100 * (`c_last' - `c_prev') / `c_prev'
 
 di as txt "Last semester (rel_sem = `max_sem') vs previous (rel_sem = `prev_sem'):"
 di as txt ""
-di as txt "  Treated: " %6.1f `t_prev' " -> " %6.1f `t_last' " (" %+5.1f `t_drop' "%)"
-di as txt "  Control: " %6.1f `c_prev' " -> " %6.1f `c_last' " (" %+5.1f `c_drop' "%)"
+di as txt "  Treated: " %6.1f `t_prev' " -> " %6.1f `t_last' " (" %5.1f `t_drop' "%)"
+di as txt "  Control: " %6.1f `c_prev' " -> " %6.1f `c_last' " (" %5.1f `c_drop' "%)"
 di as txt ""
 
 if `t_drop' < -20 | `c_drop' < -20 {
@@ -165,9 +165,9 @@ local post_c = r(mean)
 local did = (`post_t' - `pre_t') - (`post_c' - `pre_c')
 
 di as txt "LEVELS (Y):"
-di as txt "  Treated: " %6.1f `pre_t' " -> " %6.1f `post_t' " (change: " %+6.1f `post_t' - `pre_t' ")"
-di as txt "  Control: " %6.1f `pre_c' " -> " %6.1f `post_c' " (change: " %+6.1f `post_c' - `pre_c' ")"
-di as txt "  DiD: " %+6.1f `did'
+di as txt "  Treated: " %6.1f `pre_t' " -> " %6.1f `post_t' " (change: " %6.1f `post_t' - `pre_t' ")"
+di as txt "  Control: " %6.1f `pre_c' " -> " %6.1f `post_c' " (change: " %6.1f `post_c' - `pre_c' ")"
+di as txt "  DiD: " %6.1f `did'
 di as txt ""
 
 * Same for DY
@@ -184,9 +184,9 @@ local post_c_d = r(mean)
 local did_d = (`post_t_d' - `pre_t_d') - (`post_c_d' - `pre_c_d')
 
 di as txt "DELTA Y (first differences):"
-di as txt "  Treated: " %+6.2f `pre_t_d' " -> " %+6.2f `post_t_d' " (change: " %+6.2f `post_t_d' - `pre_t_d' ")"
-di as txt "  Control: " %+6.2f `pre_c_d' " -> " %+6.2f `post_c_d' " (change: " %+6.2f `post_c_d' - `pre_c_d' ")"
-di as txt "  DiD: " %+6.2f `did_d'
+di as txt "  Treated: " %6.2f `pre_t_d' " -> " %6.2f `post_t_d' " (change: " %6.2f `post_t_d' - `pre_t_d' ")"
+di as txt "  Control: " %6.2f `pre_c_d' " -> " %6.2f `post_c_d' " (change: " %6.2f `post_c_d' - `pre_c_d' ")"
+di as txt "  DiD: " %6.2f `did_d'
 di as txt ""
 
 di as txt "NOTE: Levels shows negative effect, DY shows positive effect."

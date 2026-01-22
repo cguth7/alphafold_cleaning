@@ -218,8 +218,8 @@ label var pre "Pre-treatment period"
 * Report panel size
 qui count
 local n_obs = r(N)
-qui distinct gene_id
-local n_genes = r(ndistinct)
+qui unique gene_id
+local n_genes = r(unique)
 
 di as txt ""
 di as txt "  Semester Panel Created:"

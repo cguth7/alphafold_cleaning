@@ -62,7 +62,7 @@ cap mkdir "${OUTPUT_PATH}/derived"
 * INSTALL REQUIRED PACKAGES
 *==============================================================================*
 
-foreach pkg in cem reghdfe ftools estout {
+foreach pkg in cem reghdfe ftools estout unique {
     cap which `pkg'
     if _rc {
         di as txt "Installing `pkg'..."
