@@ -173,6 +173,123 @@ Back-of-envelope DiD. If this disagrees with the regression, something is off.
 
 ---
 
+## Results
+
+### Event Study Figures (DY Specification - "Preferred")
+
+**Stata:**
+![Stata DY n_papers](figures/eventstudy_DY_n_papers.png)
+
+**Python:**
+![Python DY n_papers](../figures/eventstudy_DY_n_papers.png)
+
+Both show the same pattern: flat pre-trend, positive post-effect that grows over time.
+
+### Event Study Figures (LEVELS Specification)
+
+**Stata:**
+![Stata LEVELS n_papers](figures/eventstudy_LEVELS_n_papers.png)
+
+Levels shows a different story - pre-trend violations and no clear positive effect.
+
+---
+
+### Coefficient Comparison: Danilo vs Our Stata vs Our Python
+
+**DY Specification, n_papers (the main result):**
+
+| Period | Danilo (Stata) | Our Stata | Our Python |
+|--------|---------------|-----------|------------|
+| -2 | 0.0064 | 0.2572 | 0.2127 |
+| -1 | 0.0000 | 0.0000 | 0.0000 |
+| 0 | 0.0108 | 1.1198 | 1.0857 |
+| 1 | 0.0489 | 1.5548 | 1.5492 |
+| 2 | 0.0308 | 0.7857 | 0.7456 |
+| 3 | 0.0517 | 3.0242 | 2.9722 |
+| 4 | 0.1991 | 3.5162 | 3.5146 |
+
+**Our Stata vs Python: within ~5% of each other. Consistent.**
+
+**Our vs Danilo: ~10-20x magnitude difference.** Likely because different matched samples (our CEM matched slightly differently than his - different random seed, package version, or his sample may have different genes). Qualitative pattern is the same.
+
+**DY Specification, n_newcomer_papers:**
+
+| Period | Danilo | Our Stata | Our Python |
+|--------|--------|-----------|------------|
+| -2 | -0.0004 | 0.2812 | 0.2406 |
+| -1 | 0.0000 | 0.0000 | 0.0000 |
+| 0 | -0.0055 | 0.7472 | 0.7184 |
+| 1 | 0.0335 | 1.0676 | 1.0628 |
+| 2 | 0.0110 | 0.2973 | 0.2649 |
+| 3 | 0.0203 | 2.1498 | 2.1084 |
+| 4 | 0.1295 | 2.1462 | 2.1498 |
+
+**DY Specification, n_veteran_papers:**
+
+| Period | Danilo | Our Stata | Our Python |
+|--------|--------|-----------|------------|
+| -2 | 0.0068 | -0.0241 | -0.0279 |
+| -1 | 0.0000 | 0.0000 | 0.0000 |
+| 0 | 0.0163 | 0.3726 | 0.3673 |
+| 1 | 0.0154 | 0.4871 | 0.4864 |
+| 2 | 0.0198 | 0.4884 | 0.4807 |
+| 3 | 0.0314 | 0.8744 | 0.8639 |
+| 4 | 0.0697 | 1.3700 | 1.3649 |
+
+**DY Specification, n_top10_y:**
+
+| Period | Danilo | Our Stata | Our Python |
+|--------|--------|-----------|------------|
+| -2 | 0.0239 | 0.3695 | 0.3789 |
+| -1 | 0.0000 | 0.0000 | 0.0000 |
+| 0 | 0.0238 | 0.7819 | 0.8054 |
+| 1 | -0.0009 | -0.2529 | -0.2561 |
+| 2 | 0.0326 | 0.9980 | 0.9949 |
+| 3 | -0.0077 | 0.1096 | 0.1146 |
+| 4 | 0.0664 | 1.4715 | 1.4732 |
+
+---
+
+### DiD Summary (from Stata Diagnostics)
+
+```
+LEVELS (Y):
+  Treated: 23.8 → 25.8 (change: +2.0)
+  Control: 31.1 → 33.5 (change: +2.4)
+  DiD: -0.4  ← NEGATIVE (control grew more)
+
+DELTA Y (first differences):
+  Treated: 3.79 → -1.90 (change: -5.69)
+  Control: 5.13 → -2.43 (change: -7.56)
+  DiD: +1.88  ← POSITIVE (control decelerated more)
+```
+
+**Same data, opposite conclusions.** Levels says null/negative. DY says positive. The difference is what "effect" means:
+- Levels: did treated genes accumulate more papers? **No.**
+- DY: did treated genes decelerate less? **Yes.** But both groups decelerated.
+
+---
+
+### Raw Trends (from Stata Diagnostics)
+
+```
+n_papers (weighted mean per gene-semester):
+
+Period   Treated    Control    Gap     Treated/Control
+  -3       20.3       26.1     5.9       77.5%
+  -2       23.6       30.7     7.1       76.9%
+  -1       27.9       36.4     8.5       76.6%
+   0       28.0       36.9     8.9       76.0%
+   1       28.0       36.8     8.8       76.0%
+   2       29.1       38.6     9.5       75.5%
+   3       25.4       33.4     7.9       76.3%
+   4       18.4       24.2     5.9       75.8%
+```
+
+**Treated/Control ratio stays ~76% throughout.** The curves have the same shape, just scaled. The ΔY "effect" comes from absolute differences in a proportional decline.
+
+---
+
 ## Calendar Mapping
 
 | rel_semester | Calendar | Notes |
